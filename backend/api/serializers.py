@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Post
+from .models import Post, Category
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,3 +18,8 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'user', 'title', 'content', 'created_at', 'category']
         read_only_fields = ['id', 'user', 'created_at']
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']

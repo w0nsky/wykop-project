@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import CreateUserView, PostListCreateView, PostDetailView
+from api.views import CreateUserView, PostListCreateView, PostDetailView, CategoryListCreateView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -11,5 +11,7 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     path('api/posts/', PostListCreateView.as_view(), name='post-list-create'),
     path('api/posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+    path('api/categories/', CategoryListCreateView.as_view(), name='category-list-create'),
+
 
 ]

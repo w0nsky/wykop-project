@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializers import UserSerializer, PostSerializer
-from .models import Post
+from .serializers import UserSerializer, PostSerializer, CategorySerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .models import Post, Category
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # Create your views here.
@@ -30,3 +31,9 @@ class PostDetailView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [AllowAny]
+
+#CATEGORY VIEWS
+class CategoryListCreateView(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
