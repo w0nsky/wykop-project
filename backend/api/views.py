@@ -5,6 +5,8 @@ from .serializers import UserSerializer, PostSerializer, CategorySerializer, Com
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Post, Category, Comment
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 # Create your views here.
 
@@ -13,6 +15,12 @@ class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]  # Allow any user to create an account
+
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
 
 #POST VIEWS 
 class PostListCreateView(generics.ListCreateAPIView):
