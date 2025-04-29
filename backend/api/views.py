@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializers import UserSerializer, PostSerializer, CategorySerializer
+from .serializers import UserSerializer, PostSerializer, CategorySerializer, CommentSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .models import Post, Category
+from .models import Post, Category, Comment
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # Create your views here.
@@ -37,3 +37,16 @@ class CategoryListCreateView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+#COMMENTS VIEWS
+class PostCommentListCreateView(generics.ListCreateAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        post_id = self.kwargs['post_id']
+        return Comment.objects.filter(post__id=post_id).order_by('-created_at')
+
+    def perform_create(self, serializer):
+        post_id = self.kwargs['post_id']
+        serializer.save(user=self.request.user, post_id=post_id)
