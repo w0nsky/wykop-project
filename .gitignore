@@ -3,12 +3,13 @@ venv/
 __pycache__/
 *.pyc
 *.sqlite3
+backend/.env
 
 # Node / React
 node_modules/
 build/
 dist/
-
+frontend/.env
 # Mac/Windows
 .DS_Store
 Thumbs.db
