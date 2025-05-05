@@ -1,4 +1,11 @@
+import Navbar from "../components/Navbar";
+import PostGrid from "../components/PostGrid";
+
 function Home() {
-  return <div>Home</div>;
+  return (
+    <>
+      <PostGrid />
+    </>
+  );
 }
 export default Home;
