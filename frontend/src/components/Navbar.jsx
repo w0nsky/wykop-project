@@ -1,24 +1,10 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import api from "../api";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
-  const location = useLocation();
-  const [name, setName] = useState(false);
-  console.log(name);
+  const auth = useAuth();
+  const user = auth?.user;
 
-  useEffect(() => {
-    async function GetUserData() {
-      try {
-        const userdata = await api.get("/api/me/");
-        setName(userdata.data.username);
-      } catch (err) {
-        setName(false);
-      }
-    }
-    GetUserData();
-  }, [location.pathname]);
-  console.log(location.pathname);
   return (
     <div className="navbar bg-base-100 shadow-sm c rounded-2xl">
       <div className="container mx-auto flex flex-row justify-between">
@@ -33,7 +19,7 @@ export default function Navbar() {
             placeholder="Search"
             className="input input-bordered w-24 md:w-auto"
           />
-          {name ? (
+          {user ? (
             <div className="dropdown dropdown-end">
               <div
                 tabIndex={0}
@@ -42,7 +28,7 @@ export default function Navbar() {
               >
                 <div className="w-10 rounded-full flex justify-center items-center bg-slate-200">
                   <p className="text-3xl text-slate-500">
-                    {name.slice(0, 1).toUpperCase()}
+                    {user.username.slice(0, 1).toUpperCase()}
                   </p>
                 </div>
               </div>
@@ -60,7 +46,7 @@ export default function Navbar() {
                   <a>Settings</a>
                 </li>
                 <li>
-                  <Link to={"/logout"}>Log out</Link>
+                  <Link to="/logout">Log out</Link>
                 </li>
               </ul>
             </div>

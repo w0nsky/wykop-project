@@ -3,12 +3,14 @@ import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import LoadingIndicator from "./LoadingIndicator";
+import { useAuth } from "../context/AuthContext";
 
 function Form({ route, method }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const name = method === "login" ? "Login" : "Register";
 
@@ -21,6 +23,10 @@ function Form({ route, method }) {
       if (method === "login") {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+        // Update auth context after successful login
+        if (auth && typeof auth.fetchUserData === "function") {
+          await auth.fetchUserData();
+        }
         navigate("/");
       } else {
         navigate("/login");
