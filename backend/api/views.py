@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from rest_framework import generics
+from rest_framework import generics, filters
 from .serializers import UserSerializer, PostSerializer, CategorySerializer, CommentSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Post, Category, Comment
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from rest_framework.parsers import MultiPartParser, FormParser
 # Create your views here.
 
 #USER VIEWS
@@ -26,7 +26,9 @@ class MeView(APIView):
 class PostListCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
-
+    parser_classes = [MultiPartParser, FormParser]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'content','category__name','user__username']
     def get_permissions(self):
         if self.request.method == 'POST':
             return [IsAuthenticated()]
