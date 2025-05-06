@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -149,3 +150,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+#Azure Storage settings
+load_dotenv()
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.azure_storage.AzureStorage",
+        "OPTIONS": {
+            "account_name": os.environ.get("AZURE_ACCOUNT_NAME"),
+            "account_key": os.environ.get("AZURE_ACCOUNT_KEY"),
+            "azure_container": "media",
+            "overwrite_files": False,    # opcjonalnie: czy nadpisywać pliki o tej samej nazwie
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+MEDIA_URL = f"https://{os.environ.get('AZURE_ACCOUNT_NAME')}.blob.core.windows.net/media/"
