@@ -17,10 +17,15 @@ class PostSerializer(serializers.ModelSerializer):
     comment_count = serializers.SerializerMethodField()
     class Meta:
         model = Post
-        fields = ['id', 'user', 'title', 'content', 'created_at', 'category','image','comment_count']
-        read_only_fields = ['id', 'user', 'created_at']
+        fields = ['id', 'user', 'title', 'content', 'created_at', 'category','image','comment_count','slug']
+        read_only_fields = ['id', 'user', 'created_at', 'slug']
     def get_comment_count(self, obj):
         return obj.comments.count()
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if not data.get("image"):
+            data["image"] = "https://storagewykop.blob.core.windows.net/media/post/placeholder.webp"
+        return data
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

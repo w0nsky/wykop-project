@@ -41,6 +41,7 @@ class PostDetailView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [AllowAny]
+    lookup_field = 'slug'
 
 #CATEGORY VIEWS
 class CategoryListCreateView(generics.ListCreateAPIView):
