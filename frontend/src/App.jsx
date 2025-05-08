@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 import { AuthProvider } from "./context/AuthContext";
 import Logout from "./components/Logout";
+import PostDetail from "./pages/PostDetail";
 
 function RegisterAndLogout() {
   localStorage.clear();
@@ -26,6 +27,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<RegisterAndLogout />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/post/:slug" element={<PostDetail />} />
           </Route>
         </Routes>
       </AuthProvider>
