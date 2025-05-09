@@ -14,6 +14,7 @@ export default function PostCard({ post }) {
       </figure>
       <div className="card-body">
         <h2 className="card-title">{post.title}</h2>
+        <p>Kategoria: {post.category}</p>
         <p>{excerpt}</p>
         <Link to={`/post/${post.slug}`}>Zobacz więcej</Link>
       </div>

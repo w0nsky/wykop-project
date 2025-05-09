@@ -15,12 +15,18 @@ class UserSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     comment_count = serializers.SerializerMethodField()
+    category = serializers.SlugRelatedField(
+        queryset=Category.objects.all(),
+        slug_field='name'  # <-- tutaj zamiast ID, pokaże nazwę kategorii
+    )
     class Meta:
         model = Post
         fields = ['id', 'user', 'title', 'content', 'created_at', 'category','image','comment_count','slug']
         read_only_fields = ['id', 'user', 'created_at', 'slug']
     def get_comment_count(self, obj):
         return obj.comments.count()
+    def get_category(self,obj):
+        return obj.category.name 
     def to_representation(self, instance):
         data = super().to_representation(instance)
         if not data.get("image"):
@@ -33,7 +39,11 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
     class Meta:
         model = Comment
         fields = ['id', 'post', 'user', 'content', 'created_at']
         read_only_fields = ['id', 'user', 'created_at']
+    
+    def get_user(self, obj):
+        return obj.user.username

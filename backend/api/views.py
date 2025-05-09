@@ -43,11 +43,19 @@ class PostDetailView(generics.RetrieveAPIView):
     permission_classes = [AllowAny]
     lookup_field = 'slug'
 
+class PostsByCategoryView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    def get_queryset(self):
+        category_name = self.kwargs['category_name']
+        return Post.objects.filter(category__name=category_name)
+
 #CATEGORY VIEWS
 class CategoryListCreateView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+
 
 #COMMENTS VIEWS
 class PostCommentListCreateView(generics.ListCreateAPIView):
@@ -60,4 +68,5 @@ class PostCommentListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         post_id = self.kwargs['post_id']
-        serializer.save(user=self.request.user, post_id=post_id)
+        post_instance = Post.objects.get(id=post_id)
+        serializer.save(user=self.request.user, post=post_instance)
