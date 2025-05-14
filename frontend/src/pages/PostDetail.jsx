@@ -4,6 +4,7 @@ import api from "../api";
 import { useAuth } from "../context/AuthContext";
 import LoadingIndicator from "../components/LoadingIndicator";
 import PostComments from "../components/PostComments"; // Dodajemy import komponentu komentarzy
+import PostContent from "../components/PostContent";
 
 export default function PostDetail() {
   const { slug } = useParams();
@@ -74,9 +75,9 @@ export default function PostDetail() {
   });
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden my-6">
+    <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md overflow-hidden my-6">
       {post.image && (
-        <div className="w-full h-64 bg-gray-300 overflow-hidden">
+        <div className="w-full h-96 bg-gray-300 overflow-hidden">
           <img
             src={post.image}
             alt={post.title}
@@ -110,7 +111,9 @@ export default function PostDetail() {
         </div>
 
         <div className="prose max-w-none my-6">
-          <p className="text-gray-700 whitespace-pre-line">{post.content}</p>
+          <div className="text-gray-700 whitespace-pre-line">
+            <PostContent content={post.content} />
+          </div>
         </div>
 
         <div className="mt-8 pt-4 border-t border-gray-200">

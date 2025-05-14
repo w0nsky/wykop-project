@@ -10,6 +10,8 @@ import { AuthProvider } from "./context/AuthContext";
 import Logout from "./components/Logout";
 import PostDetail from "./pages/PostDetail";
 import PostsByCategory from "./pages/PostsByCategory";
+import CreatePostPage from "./pages/CreatePostPage";
+import EditPostPage from "./pages/EditPostPage";
 
 function RegisterAndLogout() {
   localStorage.clear();
@@ -32,6 +34,23 @@ function App() {
             <Route path="/register" element={<RegisterAndLogout />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/post/:slug" element={<PostDetail />} />
+
+            <Route
+              path="/new"
+              element={
+                <ProtectedRoute>
+                  <CreatePostPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/edit-post/:slug"
+              element={
+                <ProtectedRoute>
+                  <EditPostPage />
+                </ProtectedRoute>
+              }
+            />
           </Route>
         </Routes>
       </AuthProvider>

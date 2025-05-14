@@ -47,6 +47,5 @@ function ProtectedRoute({ children }) {
     return <div>Loading...</div>;
   }
   return isAuthorized ? children : <Navigate to="/login" />;
-  // https://www.youtube.com/watch?v=c-QsfbznSXI&list=WL&index=2&t=4004s&ab_channel=TechWithTim 1:01:58
 }
 export default ProtectedRoute;

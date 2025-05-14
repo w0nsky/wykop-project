@@ -1,11 +1,12 @@
-import { useState } from "react";
+// src/components/Form.jsx
+import React, { useState } from "react";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import LoadingIndicator from "./LoadingIndicator";
 import { useAuth } from "../context/AuthContext";
 
-function Form({ route, method }) {
+export default function Form({ route, method }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,52 +16,68 @@ function Form({ route, method }) {
   const name = method === "login" ? "Login" : "Register";
 
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await api.post(route, { username, password });
       if (method === "login") {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-        // Update auth context after successful login
-        if (auth && typeof auth.fetchUserData === "function") {
-          await auth.fetchUserData();
-        }
+        if (auth?.fetchUserData) await auth.fetchUserData();
         navigate("/");
       } else {
         navigate("/login");
       }
     } catch (error) {
-      alert(error);
+      alert(error.response?.data?.detail || error.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form-container">
-      <h1>{name}</h1>
-      <input
-        className="form-input"
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-      />
-      <input
-        className="form-input"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      {loading && <LoadingIndicator />}
-      <button className="form-button" type="submit">
-        {name}
-      </button>
-    </form>
+    <div className="flex items-center justify-center h-screen ">
+      <div className="card w-full max-w-sm shadow-xl bg-base-100">
+        <div className="card-body">
+          <h2 className="card-title justify-center mb-4">{name}</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="input input-bordered w-full"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="input input-bordered w-full"
+              required
+            />
+
+            {loading && (
+              <div className="flex justify-center">
+                <LoadingIndicator />
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className={`btn btn-primary w-full ${loading ? "loading" : ""}`}
+              disabled={loading}
+            >
+              {name}
+            </button>
+            {method == "login" && (
+              <Link to="/register">Don't have an accout?</Link>
+            )}
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }
-
-export default Form;
