@@ -3,8 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import api from "../api";
 import { useAuth } from "../context/AuthContext";
 import LoadingIndicator from "../components/LoadingIndicator";
-import PostComments from "../components/PostComments";
-import PostCommentForm from "../components/PostCommentForm";
+import PostComments from "../components/PostComments"; // Dodajemy import komponentu komentarzy
 
 export default function PostDetail() {
   const { slug } = useParams();
@@ -101,7 +100,6 @@ export default function PostDetail() {
       <div className="p-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
           <div className="mb-2 sm:mb-0">
-            <p className="text-gray-500 text-sm">{post.category}</p>
             {category && (
               <Link
                 to={`/category/${category.id}`}
@@ -168,43 +166,8 @@ export default function PostDetail() {
           </div>
         </div>
 
-        {/* Comments section placeholder */}
-        <div className="mt-10">
-          <h2 className="text-xl font-bold mb-4">
-            Komentarze ({post.comment_count})
-          </h2>
-          {/* Comments would be rendered here */}
-          {post.comment_count === 0 && (
-            <p className="text-gray-500 italic">
-              Brak komentarzy. Bądź pierwszy!
-            </p>
-          )}
-
-          {auth?.user ? (
-            <div className="mt-6">
-              <PostComments postId={post.id} />
-              <h3 className="text-lg font-medium mb-2">Dodaj komentarz</h3>
-              <PostCommentForm postId={post.id} />
-              <textarea
-                className="w-full p-3 border rounded-lg resize-none focus:ring focus:ring-blue-200 focus:border-blue-400"
-                rows="4"
-                placeholder="Twój komentarz..."
-              ></textarea>
-              <button className="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                Wyślij
-              </button>
-            </div>
-          ) : (
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <p className="text-center">
-                <Link to="/login" className="text-blue-500 hover:underline">
-                  Zaloguj się
-                </Link>{" "}
-                aby dodać komentarz.
-              </p>
-            </div>
-          )}
-        </div>
+        {/* Comments section */}
+        <PostComments postId={post.id} />
       </div>
     </div>
   );

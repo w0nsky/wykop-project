@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 const PostCommentForm = ({ postId, onCommentAdded }) => {
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
-    const token = localStorage.getItem('access');
+    const token = localStorage.getItem("access");
 
     if (!token) {
-      setError('Brak tokena autoryzacyjnego. Zaloguj się ponownie.');
+      setError("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
       setLoading(false);
       return;
     }
@@ -22,7 +22,7 @@ const PostCommentForm = ({ postId, onCommentAdded }) => {
     try {
       console.log("Dane wysyłane do API:", {
         content: content,
-        post : postId,
+        post: postId,
       });
 
       const response = await axios.post(
@@ -34,20 +34,19 @@ const PostCommentForm = ({ postId, onCommentAdded }) => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
 
-      setContent('');
+      setContent("");
       if (onCommentAdded) onCommentAdded(response.data);
-
     } catch (err) {
       console.error("Błąd podczas dodawania komentarza:", err);
       if (err.response) {
         console.error("Odpowiedź z serwera:", err.response.data);
       }
-      setError('Nie udało się dodać komentarza.');
+      setError("Nie udało się dodać komentarza.");
     } finally {
       setLoading(false);
     }
@@ -65,10 +64,12 @@ const PostCommentForm = ({ postId, onCommentAdded }) => {
       {error && <p className="text-red-500">{error}</p>}
       <button
         type="submit"
-        className={`mt-2 p-2 bg-blue-500 text-white rounded-md ${loading ? 'opacity-50' : ''}`}
+        className={`mt-2 p-2 bg-blue-500 text-white rounded-md ${
+          loading ? "opacity-50" : ""
+        }`}
         disabled={loading}
       >
-        {loading ? 'Wysyłanie...' : 'Dodaj komentarz'}
+        {loading ? "Wysyłanie..." : "Dodaj komentarz"}
       </button>
     </form>
   );
