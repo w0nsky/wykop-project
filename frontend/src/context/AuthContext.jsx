@@ -29,8 +29,9 @@ export function AuthProvider({ children }) {
 
   // Function to handle logout
   const logout = () => {
-    localStorage.removeItem("ACCESS_TOKEN");
-    localStorage.removeItem("REFRESH_TOKEN");
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    console.log("logged out");
     setUser(null);
   };
 

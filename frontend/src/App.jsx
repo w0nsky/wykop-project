@@ -9,6 +9,7 @@ import MainLayout from "./layouts/MainLayout";
 import { AuthProvider } from "./context/AuthContext";
 import Logout from "./components/Logout";
 import PostDetail from "./pages/PostDetail";
+import PostsByCategory from "./pages/PostsByCategory";
 
 function RegisterAndLogout() {
   localStorage.clear();
@@ -23,7 +24,10 @@ function App() {
           <Route element={<MainLayout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
-
+            <Route
+              path="/category/:categoryName"
+              element={<PostsByCategory />}
+            />
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<RegisterAndLogout />} />
             <Route path="*" element={<NotFound />} />

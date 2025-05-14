@@ -51,7 +51,9 @@ export default function Navbar() {
               </ul>
             </div>
           ) : (
-            <Link to={"/login"}>Login</Link>
+            <Link className="my-auto uppercase" to={"/login"}>
+              Login
+            </Link>
           )}
         </div>
       </div>

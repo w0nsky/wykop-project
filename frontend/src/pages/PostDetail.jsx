@@ -20,16 +20,9 @@ export default function PostDetail() {
         setPost(response.data);
 
         // If post has a category, fetch category details
-        if (response.data.category) {
-          try {
-            const categoryResponse = await api.get(
-              `/api/categories/${response.data.category}/`
-            );
-            setCategory(categoryResponse.data);
-          } catch (categoryErr) {
-            console.error("Error fetching category:", categoryErr);
-          }
-        }
+
+        response.data.category && setCategory(response.data.category);
+        console.log(response.data.category);
 
         setError(null);
       } catch (err) {
@@ -102,10 +95,10 @@ export default function PostDetail() {
           <div className="mb-2 sm:mb-0">
             {category && (
               <Link
-                to={`/category/${category.id}`}
+                to={`/category/${category}`}
                 className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium mb-2"
               >
-                {category.name}
+                {category}
               </Link>
             )}
             <h1 className="text-2xl font-bold text-gray-800">{post.title}</h1>
