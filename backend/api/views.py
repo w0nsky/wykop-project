@@ -35,11 +35,31 @@ class PostListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class PostDetailView(generics.RetrieveAPIView):
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = 'slug'
+    parser_classes = [MultiPartParser, FormParser]
+    
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            return [IsAuthenticated()]
+        return [AllowAny()]
+    
+    def perform_update(self, serializer):
+        # Only allow the owner of the post to update it
+        if serializer.instance.user != self.request.user:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("You can only update your own posts.")
+        serializer.save()
+    
+    def perform_destroy(self, instance):
+        # Allow post owner or admin to delete
+        if instance.user != self.request.user and not self.request.user.is_staff:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("You can only delete your own posts or you must be an admin.")
+        instance.delete()
 
 class PostsByCategoryView(generics.ListAPIView):
     serializer_class = PostSerializer

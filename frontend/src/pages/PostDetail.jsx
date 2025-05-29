@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import api from "../api";
 import { useAuth } from "../context/AuthContext";
 import LoadingIndicator from "../components/LoadingIndicator";
@@ -8,10 +8,12 @@ import PostContent from "../components/PostContent";
 
 export default function PostDetail() {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [category, setCategory] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const auth = useAuth();
 
   useEffect(() => {
@@ -21,7 +23,6 @@ export default function PostDetail() {
         setPost(response.data);
 
         // If post has a category, fetch category details
-
         response.data.category && setCategory(response.data.category);
         console.log(response.data.category);
 
@@ -38,6 +39,39 @@ export default function PostDetail() {
 
     fetchPostData();
   }, [slug]);
+
+  const handleDeletePost = async () => {
+    if (!window.confirm("Czy na pewno chcesz usunąć ten post?")) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await api.delete(`/api/posts/${slug}/`);
+      // Navigate to home page after successful deletion
+      navigate("/", {
+        state: {
+          message: "Post został pomyślnie usunięty",
+          type: "success",
+        },
+      });
+    } catch (err) {
+      console.error("Error deleting post:", err);
+      let errorMessage = "Nie udało się usunąć posta.";
+
+      if (err.response?.status === 403) {
+        errorMessage = "Nie masz uprawnień do usunięcia tego posta.";
+      } else if (err.response?.status === 404) {
+        errorMessage = "Post nie został znaleziony.";
+      } else if (err.response?.data?.detail) {
+        errorMessage = err.response.data.detail;
+      }
+
+      setError(errorMessage);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -73,6 +107,13 @@ export default function PostDetail() {
     hour: "2-digit",
     minute: "2-digit",
   });
+
+  // Check if user can delete post (owner or admin)
+  const canDeletePost =
+    auth?.user &&
+    (post.user === auth.user.id ||
+      auth.user.is_staff ||
+      auth.user.is_superuser);
 
   return (
     <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md overflow-hidden my-6">
@@ -145,18 +186,19 @@ export default function PostDetail() {
                 >
                   Edytuj
                 </Link>
-                <button
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-                  onClick={() => {
-                    if (
-                      window.confirm("Czy na pewno chcesz usunąć ten post?")
-                    ) {
-                      // Delete logic here
-                    }
-                  }}
-                >
-                  Usuń
-                </button>
+                {canDeletePost && (
+                  <button
+                    className={`px-4 py-2 rounded text-white ${
+                      isDeleting
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-red-500 hover:bg-red-600"
+                    }`}
+                    onClick={handleDeletePost}
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? "Usuwanie..." : "Usuń"}
+                  </button>
+                )}
               </div>
             )}
           </div>

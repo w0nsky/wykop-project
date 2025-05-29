@@ -90,7 +90,7 @@ export default function EditPostPage() {
       await api.put(`/api/posts/${slug}/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      navigate(`/posts/${slug}`);
+      navigate(`/post/${slug}`);
     } catch (err) {
       console.error(err);
       const detail =
