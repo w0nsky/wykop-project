@@ -108,6 +108,9 @@ export default function PostDetail() {
     minute: "2-digit",
   });
 
+  // Check if user can edit post (only post owner)
+  const canEditPost = auth?.user && post.user === auth.user.id;
+
   // Check if user can delete post (owner or admin)
   const canDeletePost =
     auth?.user &&
@@ -178,14 +181,19 @@ export default function PostDetail() {
               Powrót do listy
             </Link>
 
-            {auth?.user && post.user === auth.user.id && (
+            {/* Show buttons if user can edit OR delete */}
+            {(canEditPost || canDeletePost) && (
               <div className="flex space-x-2">
-                <Link
-                  to={`/edit-post/${post.slug}`}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded"
-                >
-                  Edytuj
-                </Link>
+                {/* Edit button - only for post owners */}
+                {canEditPost && (
+                  <Link
+                    to={`/edit-post/${post.slug}`}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded"
+                  >
+                    Edytuj
+                  </Link>
+                )}
+                {/* Delete button - for post owners and admins */}
                 {canDeletePost && (
                   <button
                     className={`px-4 py-2 rounded text-white ${

@@ -5,7 +5,7 @@ from .models import Post, Category, Comment
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'password']
+        fields = ['id', 'username', 'password', 'is_staff', 'is_superuser']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -23,10 +23,13 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'user', 'title', 'content', 'created_at', 'category','image','comment_count','slug']
         read_only_fields = ['id', 'user', 'created_at', 'slug']
+    
     def get_comment_count(self, obj):
         return obj.comments.count()
+    
     def get_category(self,obj):
         return obj.category.name 
+    
     def to_representation(self, instance):
         data = super().to_representation(instance)
         if not data.get("image"):
