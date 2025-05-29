@@ -3,10 +3,9 @@ import ReactMde from "react-mde";
 import Showdown from "showdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
-export default function PostEditor({ initialContent = "", onChange, content }) {
+export default function PostEditor({ initialContent = "", onChange }) {
   const [value, setValue] = useState(initialContent);
   const [selectedTab, setSelectedTab] = useState("write");
-  content && setValue(content);
 
   // Konwerter Markdown → HTML dla podglądu
   const converter = new Showdown.Converter({

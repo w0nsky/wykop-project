@@ -85,7 +85,7 @@ const PostComments = ({ postId }) => {
               <div className="flex items-center mb-2">
                 <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2">
                   <span className="text-sm font-bold text-gray-500">
-                    {comment.username?.slice(0, 1).toUpperCase() || "?"}
+                    {comment.user?.slice(0, 1).toUpperCase() || "?"}
                   </span>
                 </div>
                 <div>

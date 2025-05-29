@@ -27,7 +27,7 @@ export default function PostGrid() {
   }, []);
 
   return (
-    <div className="grid grid-cols-3 gap-5 mt-10 items-stretch min-h-[450px]">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-10 items-stretch min-h-[450px]">
       {loading
         ? [...Array(6)].map((_, i) => <Skeleton key={i} />)
         : posts.map((post, i) => <PostCard key={i} post={post} />)}
