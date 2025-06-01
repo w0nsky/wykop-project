@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 from decouple import config
 import dj_database_url
 import os
+import sys
 
 load_dotenv()
 
@@ -105,6 +106,12 @@ DATABASES = {
         ssl_require=True
         )
 }
+
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:'
+    }
 
 
 # Password validation
