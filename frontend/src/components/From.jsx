@@ -40,7 +40,9 @@ export default function Form({ route, method }) {
     <div className="flex items-center justify-center h-screen ">
       <div className="card w-full max-w-sm shadow-xl bg-base-100">
         <div className="card-body">
-          <h2 className="card-title justify-center mb-4">{name}</h2>
+          <h2 className="card-title justify-center mb-4">
+            {name == "login" ? "zaloguj się" : "Zarejestruj się"}
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="text"
@@ -52,7 +54,7 @@ export default function Form({ route, method }) {
             />
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Hasło"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input input-bordered w-full"
@@ -70,10 +72,10 @@ export default function Form({ route, method }) {
               className={`btn btn-primary w-full ${loading ? "loading" : ""}`}
               disabled={loading}
             >
-              {name}
+              {name == "login" ? "zaloguj się" : "Zarejestruj się"}
             </button>
             {method == "login" && (
-              <Link to="/register">Don't have an accout?</Link>
+              <Link to="/register">Nie masz konta? Zarejestruj się.</Link>
             )}
           </form>
         </div>

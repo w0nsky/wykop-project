@@ -17,6 +17,10 @@ export default function PostDetail() {
   const auth = useAuth();
 
   useEffect(() => {
+    document.title = post?.title || "Loading";
+  }, [post]);
+
+  useEffect(() => {
     const fetchPostData = async () => {
       try {
         const response = await api.get(`/api/posts/${slug}/`);

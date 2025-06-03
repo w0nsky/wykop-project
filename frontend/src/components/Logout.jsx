@@ -13,5 +13,5 @@ export default function Logout() {
     navigate("/");
   }, [auth, navigate]);
 
-  return null; // This component doesn't render anything
+  return null;
 }
